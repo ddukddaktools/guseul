@@ -253,6 +253,28 @@
   .rank-row.last .name { color: var(--text-muted); }
   .result-actions { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
 
+  .snack-promo {
+    margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--border);
+    opacity: 0; transform: translateY(6px);
+    transition: opacity .4s ease, transform .4s ease;
+  }
+  .snack-promo.show { opacity: 1; transform: none; }
+  .snack-promo .snack-title {
+    font-size: 12.5px; font-weight: 700; color: var(--text-sub);
+    text-align: center; margin-bottom: 8px;
+  }
+  .snack-chips { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+  .snack-chips a {
+    font-size: 12px; font-weight: 600; color: var(--text); text-decoration: none;
+    background: var(--bg); border: 1px solid var(--border-light);
+    border-radius: 99px; padding: 5px 10px;
+  }
+  .snack-chips a:hover { border-color: var(--brand); color: var(--brand); }
+  .snack-notice {
+    font-size: 10px; color: var(--text-muted); text-align: center;
+    margin-top: 8px; line-height: 1.5;
+  }
+
   /* ───── Info strip ───── */
   .info-strip {
     display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;
@@ -368,6 +390,18 @@
           <div class="result-actions">
             <button class="btn primary" id="rerun2Btn">🔄 다시 경주</button>
             <button class="btn" id="copyBtn">📋 결과 복사</button>
+          </div>
+          <div class="snack-promo" id="snackPromo">
+            <div class="snack-title">🍨 꼴찌가 쏘는 오늘의 디저트는?</div>
+            <div class="snack-chips">
+              <a href="https://link.coupang.com/a/fUm1YSNY4G" target="_blank" rel="noopener sponsored">🍦 월드콘</a>
+              <a href="https://link.coupang.com/a/fUm5oQdVa8" target="_blank" rel="noopener sponsored">☕ 아메리카노</a>
+              <a href="https://link.coupang.com/a/fUnbT3Zn5g" target="_blank" rel="noopener sponsored">🌰 호두과자</a>
+              <a href="https://link.coupang.com/a/fUndW3JyXQ" target="_blank" rel="noopener sponsored">🍰 치즈케이크</a>
+              <a href="https://link.coupang.com/a/fUnf6SGoZU" target="_blank" rel="noopener sponsored">🧁 마카롱</a>
+              <a href="https://link.coupang.com/a/fUnhBcGM7E" target="_blank" rel="noopener sponsored">🥤 수정과</a>
+            </div>
+            <p class="snack-notice">이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.</p>
           </div>
         </div>
       </div>
@@ -1180,7 +1214,10 @@ function showResult() {
     rows.appendChild(row);
   });
   $('resultOverlay').classList.add('show');
+  clearTimeout(snackTimer);
+  snackTimer = setTimeout(() => $('snackPromo').classList.add('show'), 500);
 }
+let snackTimer = 0;
 $('resultCloseBtn').addEventListener('click', () => $('resultOverlay').classList.remove('show'));
 $('copyBtn').addEventListener('click', async () => {
   const order = marbles.slice().sort((a, b) => a.rank - b.rank);
@@ -1267,7 +1304,9 @@ function setupRace() {
   acc = 0;
   confetti = [];
   resultShown = false;
+  clearTimeout(snackTimer);
   $('resultOverlay').classList.remove('show');
+  $('snackPromo').classList.remove('show');
   $('goOverlay').classList.add('show');
   fitCanvas();
   renderRankStrip();
